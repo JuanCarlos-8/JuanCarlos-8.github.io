@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina Web Div</title>
+    <style>
+        .Div-Rojo{
+            width: 100vw;
+            height: 20vh;
+            background-color: red;
+            border: 5px dashed; color: black;
+            text-align: center;
+        }
+        .Div-Azul{
+            width: 30vw;
+            height: 60vh;
+            background-color: blue;
+            float: left;
+            border: 7px groove; color: black;
+            text-align: center;
+        }
+        .Div-Amarillo{
+            width: 70vw;
+            height: 60vh;
+            background-color: yellow;
+            float: right;
+            border: 10px dotted; color: black;
+            text-align: center;
+            border-radius: 2pc;
+        }
+        .Div-Verde{
+            width: 100vw;
+            height: 20vh;
+            background-color: green;
+            border: 12px ridge; color: black;
+            text-align: center;
+            border-radius: 3pc;
+        }
+        .Contenedor{
+            display: flex;
+            flex-direction: row;
+        }
+    </style>
+</head>
+<body>
+    <div class="Div-Rojo"></div>
+    <div class="Contenedor">
+        <div class="Div-Azul"></div>
+        <div class="Div-Amarillo"></div>
+    </div>
+    <div class="Div-Verde"></div>
+</body>
+</html>
