@@ -46,7 +46,8 @@ select {
 }
 
 input[type="submit"],
-input[type="reset"] {
+input[type="reset"],
+button {
     padding: 10px 20px;
     color: white;
     background-color: gray;
@@ -56,7 +57,8 @@ input[type="reset"] {
 }
 
 input[type="submit"]:hover,
-input[type="reset"]:hover {
+input[type="reset"]:hover,
+button:hover {
     background-color: darkgray;
 }
 
