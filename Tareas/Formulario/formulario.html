@@ -48,14 +48,27 @@
         <br><br>
         <input type="submit" value="Enviar">
         <input type="reset" value="Borrar">
-        <button  onclick="alert('Hola,buenos dias')" type="button">Saludo</button>
-        <button onclick="document.write('Buenos dias')" type="button">Saludo con write</button>
+        <button  class="button1" onclick="alert('Hola,buenos dias')" type="button">Saludo</button>
+        <button class="button1" onclick="document.write('Buenos dias')" type="button">Saludo con write</button>
     </form>
+    <br><br>
+    <script>
+        const form = document.getElementById('contacto');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+           
+            const name = document.getElementById('name').value;
+            alert('Nombre enviado: ' + name);
+
+            const email = document.getElementById('email').value;
+            alert('Correo Electrónico enviado: ' + email);
+        });
+    </script>
 
     <footer>
         <h2>Juan Carlos 2º SMR</h2>
         <br>
-        <button onclick="document.getElementById ('fecha y hora').innerHTML = new Date()"> Haz click para ver la fecha y hora</button>
+        <button class="button2" onclick="document.getElementById ('fecha y hora').innerHTML = new Date()"> Haz click para ver la fecha y hora</button>
         <p id="fecha y hora"></p>
     </footer>
     
