@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inteligencias Artificiales</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Author" content="Juan Carlos">
+    <meta name="Description" content="Tipos de Inteligencias Artificiales">
+    <meta name="Keywords" content="IA, Chatgpt,copilot,Gemini">
+    <link rel="shortcut icon" href="./../Imagenes/IA-favicon.webp"  type="image/x-icon">
+    <link rel="stylesheet" href="./../CSS/ia.css">
+
+    <script>
+
+        function cargarWikipedia(articulo) {
+            const url = `https://es.wikipedia.org/wiki/${articulo}`;
+            document.getElementById('visor').src = url;
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <img src="./../Imagenes/IA-favicon.webp" alt="Logo">
+        <h1>Inteligencias Artificiales</h1>
+        <div>
+            ChatGPT · Gemini · Claude · Copilot
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="https://chatgpt.com/" onclick="cargarIA('info/chatgpt.html'); return false;">ChatGPT</a></li>
+            <li><a href="https://gemini.com/" onclick="cargarIA('info/gemini.html'); return false;">Gemini</a></li>
+            <li><a href="https://claude.ai/" onclick="cargarIA('info/claude.html'); return false;">Claude</a></li>
+            <li><a href="https://copilot.microsoft.com/" onclick="cargarIA('info/copilot.html'); return false;">Copilot</a></li>
+        </ul>
+    </nav>
+    <div class="div">
+        <aside>
+            <img src="./../Imagenes/chatgpt.jpg" alt="ChatGPT" onclick="cargarWikipedia('ChatGPT')" style="cursor: pointer;">
+            <img src="./../Imagenes/gemini.png" alt="Gemini" onclick="cargarWikipedia('Google_Gemini')" style="cursor: pointer;">
+            <img src="./../Imagenes/claudeia.png" alt="Claude" onclick="cargarWikipedia('Claude_(IA)')" style="cursor: pointer;">
+            <img src="./../Imagenes/copilot.webp" alt="Copilot" onclick="cargarWikipedia('Microsoft_Copilot')" style="cursor: pointer;">
+        </aside>
+
+        <main>
+            <iframe class="iframe" id="visor" src="info/chatgpt.html"></iframe>
+        </main>
+    </div>
+
+    <footer>
+        <p>Juan Carlos 2º SMR</p>
+    </footer>
+    
+</body>
+</html>
