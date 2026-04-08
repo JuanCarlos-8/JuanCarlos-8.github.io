@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ordenar números</title>
+</head>
+<body>
+
+<h2>Comparar 3 números</h2>
+
+<button onclick="pedirNumeros()">Ingresar números</button>
+
+<p id="resultado"></p>
+
+<script>
+function pedirNumeros() {
+    let n1 = parseFloat(prompt("Introduce el primer número:"));
+    let n2 = parseFloat(prompt("Introduce el segundo número:"));
+    let n3 = parseFloat(prompt("Introduce el tercer número:"));
+
+    // Verificar que sean diferentes
+    if (n1 === n2 || n1 === n3 || n2 === n3) {
+        document.getElementById("resultado").innerHTML = "Los números deben ser diferentes.";
+        return;
+    }
+
+    let numeros = [n1, n2, n3];
+
+    // Ordenar de menor a mayor
+    numeros.sort(function(a, b) {
+        return a - b;
+    });
+
+    let menor = numeros[0];
+    let mayor = numeros[2];
+
+    document.getElementById("resultado").innerHTML =
+        "Número mayor: " + mayor + "<br>" +
+        "Número menor: " + menor + "<br>" +
+        "Ordenados: " + numeros.join(", ");
+}
+
+</script>
+
+</body>
+</html>
