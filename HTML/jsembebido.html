@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Embebido</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Author" content="Juan Carlos">
+    <meta name="Description" content="Ejemplo de JavaScript embebido en HTML">
+    <meta name="Keywords" content="JavaScript, Embebido, HTML, Ejemplo">
+    <link rel="shortcut icon" href="./Imagenes/JS-favicon.png"  type="image/x-icon">
+    <script src="miprimerjs.js"></script>
+
+    <!----Para Whatsapp-->
+    <meta property="og:title" content="Inicio">
+    <meta property="og:description" content="JavaScript embebido en HTML">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://juancarlos-8.github.io/">
+    <meta property="og:image" content="https://juancarlos-8.github.io/Imagenes/APW.png">
+    <meta property="og:site_name" content="Mi pagina web">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <!---Fin para Whatsapp-->
+
+    <!---Para Twitter-->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Inicio">
+    <meta name="twitter:description" content="JavaScript embebido en HTML">
+    <meta name="twitter:image" content="https://juancarlos-8.github.io/Imagenes/APW.png">
+    <meta name="twitter:url" content="https://juancarlos-8.github.io/">
+    <!---Fin para Twitter-->
+
+    <!---Para Telegram-->
+    <meta property="og:title" content="Inicio">
+    <meta property="og:description" content="JavaScript embebido en HTML">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://juancarlos-8.github.io/">
+    <meta property="og:image" content="https://juancarlos-8.github.io/Imagenes/APW.png">
+    <meta property="og:site_name" content="Mi pagina web">
+    <!---Fin para Telegram-->
+
+</head>
+<body>
+    <script>
+        alert("HOLA ES MARTES" + edad + 'es tu edad'); // concatenacion de cadenas y variables, esto se llama concatenacion de cadenas, el operador + se utiliza para concatenar cadenas y variables en JavaScript. En este caso, se muestra un mensaje de alerta que incluye el texto "HOLA ES MARTES" seguido del valor de la variable edad y el texto "es tu edad". La variable edad debe estar definida previamente para que este código funcione correctamente.
+        document.write("el nombre es " + myName + '<h1>es mi nombre</h1>'); // document.write es un método que se utiliza para escribir contenido directamente en el documento HTML. En este caso, se muestra el texto "el nombre es " seguido del valor de la variable myName y luego se agrega un encabezado de nivel 1 con el texto "es mi nombre". La variable myName debe estar definida previamente para que este código funcione correctamente.
+        document.write("<br>tu edad es " + edad); // Aquí se muestra el texto "tu edad es " seguido del valor de la variable edad. El <br> se utiliza para insertar un salto de línea antes del texto.
+        document.write("<br>el numero PI es " + PI); // Aquí se muestra el texto "el numero PI es " seguido del valor de la variable PI.
+
+        function saludar(){ // Definimos una función llamada saludar que no toma ningún parámetro
+            //console.log("Juan Carlos 2026"); // console.log es un método que se utiliza para imprimir mensajes en la consola del navegador. En este caso, se muestra el mensaje "Juan Carlos 2026" en la consola.
+            document.write("<br>Juan Carlos 2026"); // Muestra el texto "Juan Carlos 2026" en una nueva línea debido al uso de <br>.
+            alert("Juan Carlos 2026"); // Muestra una alerta con el mensaje "Juan Carlos 2026".
+        }
+        saludar(); // Llamamos a la función saludar para que se ejecute el código dentro de ella. Esto hará que se muestre el mensaje en la consola, en el documento y en una alerta.
+
+        //FUNCIONES QUE DEVUELVEN VALORES
+        let num1 = 15, num2 = 20; // Declaramos dos variables num1 y num2 con los valores 15 y 20 respectivamente.
+        function sumar(a,b){ // a y b son parametros de la funcion sumar, que se utilizan para recibir los valores que se pasarán a la función cuando se llame. En este caso, a y b representarán los números que se desean sumar.
+            return sumar=a + b; // La función sumar toma los parámetros a y b, los suma y devuelve el resultado. El valor de retorno se asigna a la variable sumar, aunque esto no es necesario y puede ser confuso. En su lugar, podríamos simplemente devolver a + b sin asignarlo a una variable.
+        }
+        //document.write("<br>El resultado de la suma es: " + sumar(num1,num2)); // num1 y num2 son argumentos de la funcion
+        let suma = sumar(num1,num2); // Llamamos a la función sumar con los argumentos num1 y num2, y almacenamos el resultado en la variable suma. Esto ejecutará la función sumar, que realizará la suma de num1 y num2, y el resultado se guardará en la variable suma.
+        document.write(`<br>La suma ${num1} <br> y ${num2} es: ${suma}`); // Aquí se muestra el resultado de la suma utilizando template literals (plantillas literales) para insertar las variables num1, num2 y suma dentro de la cadena de texto. El resultado se mostrará en una nueva línea debido al uso de <br>.
+        console.log(`La suma ${num1} \n y ${num2} es: ${suma}`); // Aquí se muestra el resultado de la suma en la consola utilizando template literals. El \n se utiliza para insertar un salto de línea en la consola, lo que hará que el texto "y ${num2} es: ${suma}" aparezca en una nueva línea después de "La suma ${num1}".
+
+    </script>
+</body>
+</html>
