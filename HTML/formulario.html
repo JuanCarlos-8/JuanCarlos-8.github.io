@@ -14,6 +14,9 @@
 <body>
     <h1>Formulario de Registro</h1>
     <form action="/submit" method="post" id="contacto">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required pattern="[0-9]{4}" maxlength="4">
+        <br><br>
         <label for="name">Nombre:</label>
         <input type="text" id="name" name="name" required>
         <br><br>
@@ -30,11 +33,9 @@
         <input type="number" id="edad" name="edad" min="0" max="100" required>
         <br><br>
         <label for="genero">Género:</label>
-        <select id="genero" name="genero">
-            <option value="masculino">Masculino</option>
-            <option value="femenino">Femenino</option>
-            <option value="otro">Otro</option>
-        </select>
+        <label><input type="radio" id="masculino" name="genero" value="masculino"> Masculino</label>
+        <label><input type="radio" id="femenino" name="genero" value="femenino"> Femenino</label>
+        <label><input type="radio" id="otro" name="genero" value="otro"> Otro</label>
         <br><br>
         <label for="fecha">Fecha de Nacimiento:</label>
         <input type="date" id="fecha" name="fecha">
