@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 Agenda - Firebase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            flex: 1;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        #userInfo {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        #eventoForm {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .agenda-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        .agenda-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        #buscar {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        #ordenar {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .eventos-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .evento-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .evento-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .evento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .evento-nombre {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .evento-fecha {
+            color: #718096;
+            font-size: 0.9em;
+            background: #edf2f7;
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        .evento-descripcion {
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .evento-hora {
+            color: #667eea;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+
+        .evento-acciones {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background: #4299e1;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-edit:hover {
+            background: #3182ce;
+        }
+
+        .btn-delete {
+            background: #f56565;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-delete:hover {
+            background: #e53e3e;
+        }
+
+        .no-eventos {
+            text-align: center;
+            color: #718096;
+            padding: 40px 20px;
+            font-size: 1.1em;
+        }
+
+        .login-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+        }
+
+        .login-card h2 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .login-card p {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.05em;
+        }
+
+        .login-card .btn {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            color: #718096;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #2d3748;
+        }
+
+        #editForm {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #editForm input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        #editForm button {
+            background: #48bb78;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #editForm button:hover {
+            background: #38a169;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: #48bb78;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: slideInRight 0.3s;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.error {
+            background: #f56565;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .auth-buttons button {
+                width: 100%;
+            }
+
+            #eventoForm {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>� Registro de Clientes</h1>
+        </header>
+
+        <main id="mainContent" style="display:block;">
+            <section class="form-section">
+                <h2>Registrar Cliente</h2>
+                <form id="clienteForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" placeholder="Nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos:</label>
+                        <input type="text" id="apellidos" placeholder="Apellidos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo">Correo:</label>
+                        <input type="email" id="correo" placeholder="correo@ejemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de nacimiento:</label>
+                        <input type="date" id="fechaNacimiento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" id="telefono" placeholder="123456789" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Guardar Cliente</button>
+                </form>
+            </section>
+
+            <section class="agenda-section">
+                <h2>Clientes Registrados</h2>
+                <div id="clientesList" class="eventos-container">
+                    <p class="no-eventos">No hay clientes registrados aún.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para editar evento -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Evento</h2>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editNombre">Nombre:</label>
+                    <input type="text" id="editNombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEvento">Evento:</label>
+                    <input type="text" id="editEvento" required>
+                </div>
+                <div class="form-group">
+                    <label for="editFecha">Fecha:</label>
+                    <input type="date" id="editFecha" required>
+                </div>
+                <div class="form-group">
+                    <label for="editHora">Hora:</label>
+                    <input type="time" id="editHora" required>
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            getDocs,
+            query,
+            orderBy,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBw8YwGdTvZf4FAMyfICH0Tzz4_WF020l0",
+            authDomain: "clientes-db-7f624.firebaseapp.com",
+            projectId: "clientes-db-7f624",
+            storageBucket: "clientes-db-7f624.firebasestorage.app",
+            messagingSenderId: "552826556656",
+            appId: "1:552826556656:web:b8239de7641e0b8402f235",
+            measurementId: "G-DTHFTRXJGE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('clienteForm').addEventListener('submit', guardarCliente);
+            listarClientes();
+        });
+
+        async function guardarCliente(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellidos = document.getElementById('apellidos').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+            const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+            const telefono = document.getElementById('telefono').value.trim();
+
+            if (!nombre || !apellidos || !correo || !fechaNacimiento || !telefono) {
+                mostrarNotificacion('Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, 'clientes'), {
+                    nombre,
+                    apellidos,
+                    correo,
+                    fechaNacimiento,
+                    telefono,
+                    createdAt: serverTimestamp()
+                });
+
+                mostrarNotificacion('Cliente guardado en Firestore');
+                document.getElementById('clienteForm').reset();
+                await listarClientes();
+            } catch (error) {
+                mostrarNotificacion('Error: ' + error.message, 'error');
+                console.error('Error al guardar cliente:', error);
+            }
+        }
+
+        async function listarClientes() {
+            try {
+                const clientesQuery = query(collection(db, 'clientes'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(clientesQuery);
+                const clientes = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+                mostrarClientes(clientes);
+            } catch (error) {
+                mostrarNotificacion('Error al cargar clientes: ' + error.message, 'error');
+                console.error('Error al cargar clientes:', error);
+            }
+        }
+
+        function mostrarClientes(clientes) {
+            const container = document.getElementById('clientesList');
+            if (clientes.length === 0) {
+                container.innerHTML = '<p class="no-eventos">No hay clientes registrados aún.</p>';
+                return;
+            }
+
+            container.innerHTML = clientes
+                .map((cliente) => `
+                    <div class="evento-card">
+                        <div class="evento-header">
+                            <div class="evento-nombre">${escaparHTML(cliente.nombre)} ${escaparHTML(cliente.apellidos)}</div>
+                            <span class="evento-fecha">${escaparHTML(cliente.fechaNacimiento)}</span>
+                        </div>
+                        <div class="evento-descripcion">Correo: ${escaparHTML(cliente.correo)}</div>
+                        <div class="evento-hora">Teléfono: ${escaparHTML(cliente.telefono)}</div>
+                    </div>
+                `)
+                .join('');
+        }
+
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + tipo;
+            notification.textContent = mensaje;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function escaparHTML(texto) {
+            const div = document.createElement('div');
+            div.textContent = texto;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
