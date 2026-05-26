@@ -1,0 +1,43 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Animación de tachado elegante */
+.task-completed-text {
+    text-decoration: line-through;
+    color: #9ca3af;
+    transition: all 0.4s ease;
+}
+
+/* Efecto Hover Suave en Tarjetas */
+.task-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Scrollbars Minimalistas e independientes para cada columna */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para los botones activos e inactivos de los días de la semana */
+.day-btn-active {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+    transform: scale(1.03);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
