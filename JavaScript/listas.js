@@ -1,3 +1,31 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    orderBy,
+    serverTimestamp,
+    doc,
+    updateDoc,
+    deleteDoc,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+// --- FIREBASE ---
+const firebaseConfig = {
+    apiKey: "AIzaSyBHOn1ysvAHWZ0vupXsnS_o6CezXFNudhE",
+    authDomain: "listas-35809.firebaseapp.com",
+    projectId: "listas-35809",
+    storageBucket: "listas-35809.firebasestorage.app",
+    messagingSenderId: "101914407649",
+    appId: "1:101914407649:web:a2cf60bbe3de551f623da0"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const tasksCollectionRef = collection(db, 'tasks');
+
 // --- ELEMENTOS DEL DOM ---
 const weekSelector = document.getElementById('week-selector');
 const extendedDate = document.getElementById('extended-date');
@@ -33,8 +61,38 @@ function init() {
     renderWeekSelector();
     updateDateDisplay();
     renderDashboard();
+    loadFirestoreTasks();
     // Revisar periódicamente si las tareas cambian a estado "expirado" con el paso del tiempo
-    setInterval(renderDashboard, 30000); 
+    setInterval(renderDashboard, 30000);
+}
+
+async function loadFirestoreTasks() {
+    try {
+        const q = query(tasksCollectionRef, orderBy('createdAt', 'asc'));
+        onSnapshot(q, (snapshot) => {
+            tasks = snapshot.docs.map(docSnap => {
+                const data = docSnap.data();
+                return {
+                    id: docSnap.id,
+                    title: data.title || '',
+                    deadline: data.deadline || '',
+                    assignedDate: data.assignedDate || '',
+                    completed: data.completed || false,
+                    createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : (typeof data.createdAt === 'string' ? data.createdAt : '')
+                };
+            });
+            localStorage.setItem('advanced_tasks', JSON.stringify(tasks));
+            renderDashboard();
+        }, (error) => {
+            console.error('Firebase onSnapshot error:', error);
+            tasks = JSON.parse(localStorage.getItem('advanced_tasks')) || [];
+            renderDashboard();
+        });
+    } catch (err) {
+        console.error('Error cargando tareas de Firebase:', err);
+        tasks = JSON.parse(localStorage.getItem('advanced_tasks')) || [];
+        renderDashboard();
+    }
 }
 
 // --- CONFIGURACIÓN DE FECHAS Y SEMANA ---
@@ -175,9 +233,9 @@ function renderDashboard() {
 }
 
 // --- CREAR TAREA ---
-taskForm.addEventListener('submit', (e) => {
+taskForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const title = taskTitleInput.value.trim();
     const deadline = taskTimeInput.value;
     const assignedString = selectedDate.toISOString().split('T')[0];
@@ -185,31 +243,62 @@ taskForm.addEventListener('submit', (e) => {
     if (!title || !deadline) return;
 
     const newTask = {
-        id: 'task_' + Date.now(),
         title: title,
         deadline: deadline,
         assignedDate: assignedString,
         completed: false,
-        createdAt: new Date().toISOString()
+        createdAt: serverTimestamp()
     };
 
-    tasks.push(newTask);
-    taskTitleInput.value = '';
-    taskTimeInput.value = '';
-    
-    saveAndSync();
+    try {
+        const docRef = await addDoc(tasksCollectionRef, newTask);
+        tasks.push({
+            id: docRef.id,
+            title: title,
+            deadline: deadline,
+            assignedDate: assignedString,
+            completed: false,
+            createdAt: new Date().toISOString()
+        });
+        taskTitleInput.value = '';
+        taskTimeInput.value = '';
+        saveAndSync();
+    } catch (error) {
+        console.error('Error guardando tarea en Firebase:', error);
+        alert('No se pudo guardar la tarea en Firebase. Revisa la consola para más detalles.');
+    }
 });
 
 // Cambiar estado
-window.toggleTaskStatus = function(globalIndex) {
-    tasks[globalIndex].completed = !tasks[globalIndex].completed;
-    saveAndSync();
+window.toggleTaskStatus = async function(globalIndex) {
+    const task = tasks[globalIndex];
+    if (!task || !task.id) return;
+
+    try {
+        await updateDoc(doc(tasksCollectionRef, task.id), {
+            completed: !task.completed
+        });
+        tasks[globalIndex].completed = !task.completed;
+        saveAndSync();
+    } catch (error) {
+        console.error('Error actualizando tarea en Firebase:', error);
+        alert('No se pudo cambiar el estado de la tarea.');
+    }
 };
 
 // Eliminar Tarea
-window.deleteTask = function(globalIndex) {
-    tasks.splice(globalIndex, 1);
-    saveAndSync();
+window.deleteTask = async function(globalIndex) {
+    const task = tasks[globalIndex];
+    if (!task || !task.id) return;
+
+    try {
+        await deleteDoc(doc(tasksCollectionRef, task.id));
+        tasks.splice(globalIndex, 1);
+        saveAndSync();
+    } catch (error) {
+        console.error('Error eliminando tarea en Firebase:', error);
+        alert('No se pudo eliminar la tarea.');
+    }
 };
 
 function saveAndSync() {
@@ -259,8 +348,31 @@ function calculateMonthlyMetrics() {
 }
 
 // --- GOOGLE CALENDAR LINK ---
+function buildGoogleCalendarEventUrl(tasksToSync) {
+    const selectedString = selectedDate.toISOString().split('T')[0];
+    const dateId = selectedString.replace(/-/g, '');
+    const eventTitle = `Tareas del ${selectedString}`;
+    const eventDetails = tasksToSync
+        .map((task, index) => `${index + 1}. ${task.title} — ${task.deadline}`)
+        .join('\n');
+
+    const startTime = `${dateId}T080000`;
+    const endTime = `${dateId}T090000`;
+
+    return `https://calendar.google.com/calendar/u/0/r/eventedit?text=${encodeURIComponent(eventTitle)}&details=${encodeURIComponent(eventDetails)}&dates=${startTime}/${endTime}`;
+}
+
 document.getElementById('btn-calendar').addEventListener('click', () => {
-    alert("Módulo API Google Calendar\\n\\nEstructura lista para producción. En el entorno real, aquí se ejecuta la petición OAuth2 enviando el array JSON con las propiedades 'title' y 'deadline' mapeadas como eventos.");
+    const selectedString = selectedDate.toISOString().split('T')[0];
+    const dayTasks = tasks.filter(task => task.assignedDate === selectedString);
+
+    if (dayTasks.length === 0) {
+        alert('No hay tareas para la fecha seleccionada. Añade una tarea antes de sincronizar con Google Calendar.');
+        return;
+    }
+
+    const calendarUrl = buildGoogleCalendarEventUrl(dayTasks);
+    window.open(calendarUrl, '_blank');
 });
 
 // Lanzar sistema
